@@ -43,7 +43,8 @@ jobs:
       - name: Download IPA
         run: |
           mkdir -p ipa
-          gdown --fuzzy "${{ inputs.ipa_url }}" -O ipa/spotify.ipa
+          FILE_ID=$(echo "${{ inputs.ipa_url }}" | sed -n 's#.*/d/\([^/]*\).*#\1#p')
+          gdown "https://drive.google.com/uc?id=${FILE_ID}" -O ipa/spotify.ipa
           case "$(file --mime-type -b ipa/spotify.ipa)" in application/zip|application/x-ios-app) ;; *) echo "::error::Not an IPA"; exit 1 ;; esac
 
       - run: make release
